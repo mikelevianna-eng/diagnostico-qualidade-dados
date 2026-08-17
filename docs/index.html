@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagnóstico de qualidade · cadastro_clientes.csv</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAFAFA; --ink:#0F172A; --primary:#2563EB; --surface:#FFFFFF;
+  --muted:#5B6678; --faint:#8A93A3; --gray:#CBD5E1;
+  --line:rgba(15,23,42,.09); --line-soft:rgba(15,23,42,.055); --tint:rgba(37,99,235,.07);
+  --display:"Inter Tight","Inter",system-ui,sans-serif;
+  --body:"Inter",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r-md:14px; --r-lg:20px;
+  --shadow-1:0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03);
+  --shadow-2:0 12px 32px -14px rgba(15,23,42,.16), 0 2px 6px rgba(15,23,42,.04);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.6;letter-spacing:-.006em;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E")}
+.wrap{max-width:980px;margin-inline:auto;padding:64px 24px 80px;position:relative;z-index:1}
+
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.eyebrow::before{content:"";width:16px;height:1px;background:var(--gray)}
+h1{font-family:var(--display);font-weight:600;letter-spacing:-.038em;line-height:1.05;
+  font-size:clamp(30px,5vw,44px);margin:0 0 14px}
+.lead{color:var(--muted);font-size:17px;max-width:60ch;margin:0}
+.meta{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);margin-top:22px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.meta i{width:12px;height:1px;background:var(--gray);display:block;font-style:normal}
+
+h2{font-family:var(--display);font-weight:600;font-size:22px;letter-spacing:-.028em;
+  margin:56px 0 6px}
+.sub{color:var(--muted);font-size:14.5px;margin:0 0 20px;max-width:66ch}
+
+.nota{margin-top:44px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg);box-shadow:var(--shadow-2);padding:32px;
+  display:flex;gap:30px;align-items:center;flex-wrap:wrap}
+.nota__n{font-family:var(--display);font-size:76px;font-weight:600;letter-spacing:-.05em;
+  line-height:.9;color:#DC2626}
+.nota__n small{font-size:19px;color:var(--faint);font-weight:500;letter-spacing:-.02em}
+.nota__txt{flex:1;min-width:280px}
+.nota__txt b{font-family:var(--display);font-size:19px;font-weight:600;letter-spacing:-.02em;display:block}
+.nota__txt p{color:var(--muted);font-size:14.5px;margin:6px 0 0;max-width:52ch}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);
+  margin-top:34px}
+.stats div{padding:20px 18px 20px 0;border-bottom:1px solid var(--line-soft)}
+.stats b{display:block;font-family:var(--display);font-size:27px;font-weight:600;letter-spacing:-.032em}
+.stats span{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--faint)}
+
+.painel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:var(--shadow-1);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint);padding:16px 18px 12px;
+  border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:15px 18px;border-bottom:1px solid var(--line-soft);vertical-align:top;font-size:14px}
+tr:last-child td{border-bottom:0}
+td b{font-family:var(--display);font-weight:600;letter-spacing:-.015em;display:block}
+td .det{display:block;color:var(--muted);font-size:13px;margin-top:3px;max-width:62ch;line-height:1.55}
+td.n{text-align:right;font-family:var(--mono);font-size:13px;white-space:nowrap}
+td.muted{color:var(--faint)}
+td.mono{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+th.r{text-align:right}
+.sit{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.07em;
+  text-transform:uppercase;padding:4px 9px;border-radius:99px;white-space:nowrap}
+
+.ficticio{margin-top:26px;border:1px solid rgba(180,83,9,.22);border-radius:var(--r-md);
+  background:rgba(180,83,9,.055);padding:18px 20px;display:flex;gap:13px;align-items:flex-start}
+.ficticio svg{width:17px;height:17px;color:#B45309;flex:none;margin-top:2px}
+.ficticio b{font-family:var(--display);font-size:14px;font-weight:600;display:block;margin-bottom:3px;color:#7C3D06}
+.ficticio p{margin:0;color:#8A5A22;font-size:13px;max-width:74ch;line-height:1.55}
+
+.aviso{margin-top:56px;border:1px solid var(--line);border-radius:var(--r-md);
+  background:var(--tint);padding:20px 22px;display:flex;gap:14px;align-items:flex-start}
+.aviso svg{width:17px;height:17px;color:var(--primary);flex:none;margin-top:3px}
+.aviso b{font-family:var(--display);font-size:14.5px;font-weight:600;display:block;margin-bottom:3px}
+.aviso p{margin:0;color:var(--muted);font-size:13.5px;max-width:72ch}
+
+footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+footer b{color:var(--ink);font-weight:500}
+@media(max-width:720px){
+  .wrap{padding:44px 18px 60px}
+  .stats{grid-template-columns:1fr 1fr}
+  .nota{padding:24px}
+  td,th{padding-inline:14px}
+}
+</style></head><body><div class="wrap">
+
+<p class="eyebrow">Diagnóstico de qualidade de dados</p>
+<h1>O que impede esta base<br>de sustentar uma análise</h1>
+<p class="lead">Leitura automática do arquivo recebido, apontando os problemas que
+distorcem indicadores e registrando cada correção aplicada.</p>
+<p class="meta"><span>cadastro_clientes.csv</span><i></i><span>separador &ldquo;;&rdquo;</span>
+<i></i><span>codificação utf-8</span></p>
+
+<div class="ficticio">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+    stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+  <div><b>Demonstração com dados fictícios</b>
+  <p>Os registros analisados neste relatório foram gerados por script para fins de portfólio.
+  Nomes, documentos, contatos e valores são sorteados e não correspondem a nenhuma pessoa ou
+  empresa real. Os CPFs não possuem dígito verificador válido. A metodologia de diagnóstico e
+  limpeza é real e se aplica a qualquer base.</p></div>
+</div>
+
+<div class="nota">
+  <div class="nota__n">53<small>/100</small></div>
+  <div class="nota__txt"><b>Base comprometida</b><p>A base compromete qualquer análise feita sobre ela sem correção prévia.</p></div>
+</div>
+
+<div class="stats">
+  <div><b>636</b><span>linhas recebidas</span></div>
+  <div><b>600</b><span>linhas entregues</span></div>
+  <div><b>21</b><span>problemas encontrados</span></div>
+  <div><b>15</b><span>correções aplicadas</span></div>
+</div>
+
+<h2>Problemas encontrados</h2>
+<p class="sub">Ordenados por gravidade. A coluna de percentual indica a fatia dos registros
+atingida por cada problema.</p>
+<div class="painel"><table>
+<thead><tr><th>Coluna</th><th>Gravidade</th><th>Problema</th>
+<th class="r">Registros</th><th class="r">Participação</th></tr></thead>
+<tbody><tr><td class="mono">total_comprado</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Número escrito de várias formas</b><span class="det">Formatos encontrados: com símbolo de moeda, ponto decimal, vírgula decimal. Somar sem tratar gera erro silencioso.</span></td><td class="n">636</td><td class="n muted">100.0%</td></tr><tr><td class="mono">data_cadastro</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Datas em formatos diferentes</b><span class="det">Formatos encontrados: ano-mês-dia, dia-mês-ano curto, dia/mês/ano. Datas como 03/05 ficam ambíguas entre dia e mês.</span></td><td class="n">636</td><td class="n muted">100.0%</td></tr><tr><td class="mono">uf</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Mesma categoria escrita de formas diferentes</b><span class="det">1 grupos de valores equivalentes. Exemplos: rs / RS / R.S.. Qualquer contagem agrupada por esta coluna sai fragmentada.</span></td><td class="n">636</td><td class="n muted">100.0%</td></tr><tr><td class="mono">obs_sistema</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Campos em branco</b><span class="det">Coluna praticamente vazia.</span></td><td class="n">631</td><td class="n muted">99.2%</td></tr><tr><td class="mono">limite_credito</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Número escrito de várias formas</b><span class="det">Formatos encontrados: com símbolo de moeda, ponto decimal, vírgula decimal. Somar sem tratar gera erro silencioso.</span></td><td class="n">592</td><td class="n muted">93.1%</td></tr><tr><td class="mono">cidade</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Mesma categoria escrita de formas diferentes</b><span class="det">6 grupos de valores equivalentes. Exemplos: Ijui / ijui / IJUI · PASSO FUNDO / passo fundo / Passo Fundo. Qualquer contagem agrupada por esta coluna sai fragmentada.</span></td><td class="n">515</td><td class="n muted">81.0%</td></tr><tr><td class="mono">canal_origem</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Mesma categoria escrita de formas diferentes</b><span class="det">3 grupos de valores equivalentes. Exemplos: Site / site · WhatsApp / whatsapp / Whatsapp. Qualquer contagem agrupada por esta coluna sai fragmentada.</span></td><td class="n">464</td><td class="n muted">73.0%</td></tr><tr><td class="mono">ativo</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Mesma categoria escrita de formas diferentes</b><span class="det">2 grupos de valores equivalentes. Exemplos: N / n · S / s. Qualquer contagem agrupada por esta coluna sai fragmentada.</span></td><td class="n">297</td><td class="n muted">46.7%</td></tr><tr><td class="mono">cpf</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Documento com quantidade de dígitos incorreta</b><span class="det">Esperado 11 dígitos. Fora disso não há como validar.</span></td><td class="n">63</td><td class="n muted">9.9%</td></tr><tr><td class="mono">tabela</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Cadastros repetidos com identificador diferente</b><span class="det">Mesma pessoa cadastrada mais de uma vez. Infla a contagem de clientes e divide o histórico de compras.</span></td><td class="n">36</td><td class="n muted">5.7%</td></tr><tr><td class="mono">email</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Endereço de e-mail inválido</b><span class="det">Registros sem arroba não permitem contato.</span></td><td class="n">30</td><td class="n muted">4.7%</td></tr><tr><td class="mono">total_comprado</td><td><span class="sit" style="color:#DC2626;background:rgba(220,38,38,.08)">Crítico</span></td><td><b>Valores negativos</b><span class="det">Valor negativo neste campo costuma indicar erro de lançamento.</span></td><td class="n">12</td><td class="n muted">1.9%</td></tr><tr><td class="mono">ativo</td><td><span class="sit" style="color:#B45309;background:rgba(180,83,9,.08)">Atenção</span></td><td><b>Sim e não escritos de várias formas</b><span class="det">Valores encontrados: 0, 1, n, nao, s, sim. Filtrar por esta coluna exige lembrar de todas as grafias.</span></td><td class="n">636</td><td class="n muted">100.0%</td></tr><tr><td class="mono">cidade</td><td><span class="sit" style="color:#B45309;background:rgba(180,83,9,.08)">Atenção</span></td><td><b>Valores parecidos que podem ser a mesma coisa</b><span class="det">Exemplos: Sta. Maria / Santa Maria · Santa Maria / Santo Angelo · STO ANGELO / Santo Angelo. Não foram unificados automaticamente porque a semelhança pode ser coincidência. Confirme com quem opera o sistema antes de corrigir.</span></td><td class="n">344</td><td class="n muted">54.1%</td></tr><tr><td class="mono">telefone</td><td><span class="sit" style="color:#B45309;background:rgba(180,83,9,.08)">Atenção</span></td><td><b>Campos em branco</b><span class="det">A coluna não está preenchida em parte dos registros.</span></td><td class="n">89</td><td class="n muted">14.0%</td></tr><tr><td class="mono">email</td><td><span class="sit" style="color:#B45309;background:rgba(180,83,9,.08)">Atenção</span></td><td><b>Campos em branco</b><span class="det">A coluna não está preenchida em parte dos registros.</span></td><td class="n">77</td><td class="n muted">12.1%</td></tr><tr><td class="mono">limite_credito</td><td><span class="sit" style="color:#B45309;background:rgba(180,83,9,.08)">Atenção</span></td><td><b>Campos em branco</b><span class="det">A coluna não está preenchida em parte dos registros.</span></td><td class="n">44</td><td class="n muted">6.9%</td></tr><tr><td class="mono">cidade</td><td><span class="sit" style="color:#B45309;background:rgba(180,83,9,.08)">Atenção</span></td><td><b>Campos em branco</b><span class="det">A coluna não está preenchida em parte dos registros.</span></td><td class="n">30</td><td class="n muted">4.7%</td></tr><tr><td class="mono">nome</td><td><span class="sit" style="color:#2563EB;background:rgba(37,99,235,.07)">Leve</span></td><td><b>Espaços no início, no fim ou repetidos</b><span class="det">Espaços invisíveis fazem o mesmo valor ser tratado como diferente.</span></td><td class="n">169</td><td class="n muted">26.6%</td></tr><tr><td class="mono">uf</td><td><span class="sit" style="color:#2563EB;background:rgba(37,99,235,.07)">Leve</span></td><td><b>Espaços no início, no fim ou repetidos</b><span class="det">Espaços invisíveis fazem o mesmo valor ser tratado como diferente.</span></td><td class="n">157</td><td class="n muted">24.7%</td></tr><tr><td class="mono">email</td><td><span class="sit" style="color:#2563EB;background:rgba(37,99,235,.07)">Leve</span></td><td><b>Espaços no início, no fim ou repetidos</b><span class="det">Espaços invisíveis fazem o mesmo valor ser tratado como diferente.</span></td><td class="n">22</td><td class="n muted">3.5%</td></tr></tbody></table></div>
+
+<h2>Correções aplicadas</h2>
+<p class="sub">Nenhum registro foi alterado sem constar nesta lista. É o que permite
+reconciliar os números tratados com o sistema de origem.</p>
+<div class="painel"><table>
+<thead><tr><th>Coluna</th><th>Ação</th><th class="r">Registros</th></tr></thead>
+<tbody><tr><td class="mono">nome</td><td><b>Espaços removidos</b><span class="det">Texto normalizado com um único espaço entre palavras.</span></td><td class="n">169</td></tr><tr><td class="mono">email</td><td><b>Espaços removidos</b><span class="det">Texto normalizado com um único espaço entre palavras.</span></td><td class="n">22</td></tr><tr><td class="mono">uf</td><td><b>Espaços removidos</b><span class="det">Texto normalizado com um único espaço entre palavras.</span></td><td class="n">157</td></tr><tr><td class="mono">limite_credito</td><td><b>Convertido para número</b><span class="det">Separador decimal interpretado pela posição e símbolo de moeda removido.</span></td><td class="n">592</td></tr><tr><td class="mono">total_comprado</td><td><b>Convertido para número</b><span class="det">Separador decimal interpretado pela posição e símbolo de moeda removido.</span></td><td class="n">636</td></tr><tr><td class="mono">total_comprado</td><td><b>Negativos removidos</b><span class="det">Marcados como ausentes para não contaminar somas e médias.</span></td><td class="n">12</td></tr><tr><td class="mono">data_cadastro</td><td><b>Convertida para data</b><span class="det">Formatos testados explicitamente, com prioridade para o padrão brasileiro.</span></td><td class="n">636</td></tr><tr><td class="mono">cidade</td><td><b>Categorias unificadas</b><span class="det">Cada grupo passou a usar a grafia mais frequente como padrão.</span></td><td class="n">515</td></tr><tr><td class="mono">uf</td><td><b>Categorias unificadas</b><span class="det">Cada grupo passou a usar a grafia mais frequente como padrão.</span></td><td class="n">636</td></tr><tr><td class="mono">canal_origem</td><td><b>Categorias unificadas</b><span class="det">Cada grupo passou a usar a grafia mais frequente como padrão.</span></td><td class="n">464</td></tr><tr><td class="mono">ativo</td><td><b>Categorias unificadas</b><span class="det">Cada grupo passou a usar a grafia mais frequente como padrão.</span></td><td class="n">297</td></tr><tr><td class="mono">ativo</td><td><b>Padronizado para Sim e Não</b><span class="det">Todas as grafias equivalentes passaram a usar a mesma forma.</span></td><td class="n">636</td></tr><tr><td class="mono">cpf</td><td><b>Documento padronizado</b><span class="det">Mantidos apenas os dígitos. Registros inválidos ficaram em branco.</span></td><td class="n">573</td></tr><tr><td class="mono">email</td><td><b>E-mails inválidos removidos</b><span class="det">Convertidos para branco e sinalizados para conferência manual.</span></td><td class="n">30</td></tr><tr><td class="mono">tabela</td><td><b>Cadastros duplicados removidos</b><span class="det">Mantido o primeiro registro de cada pessoa.</span></td><td class="n">36</td></tr></tbody></table></div>
+
+<div class="aviso">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+    stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+  <div><b>Como ler a nota</b>
+  <p>A nota parte de 100 e desconta a proporção de registros comprometidos, ponderada pela
+  gravidade. Dentro de cada coluna considera-se o pior problema, e não a soma, porque os
+  mesmos registros costumam ser atingidos por mais de um defeito ao mesmo tempo. Somar
+  contaria a mesma linha várias vezes e levaria qualquer base minimamente suja a zero.</p></div>
+</div>
+
+<div class="aviso">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+    stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+  <div><b>O que não foi corrigido automaticamente</b>
+  <p>Valores apenas parecidos, como abreviações, ficam sinalizados mas intactos. Unificar
+  por semelhança juntaria corretamente &ldquo;Sta. Maria&rdquo; e &ldquo;Santa Maria&rdquo;, mas o mesmo critério
+  juntaria &ldquo;Santo Ângelo&rdquo; e &ldquo;Santa Ângela&rdquo;. Correção que adivinha é pior do que problema
+  declarado, então a decisão fica com quem conhece a operação.</p></div>
+</div>
+
+<footer>
+  <span>12 problemas críticos · 36 linhas removidas por duplicidade</span>
+  <span>Dados fictícios · Relatório gerado por <b>MV Engenharia de Dados</b></span>
+</footer>
+</div></body></html>
